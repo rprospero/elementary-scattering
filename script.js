@@ -89,9 +89,12 @@ beam.subscribe(pt => document.querySelector("#source").setAttribute("transform",
 var neutron_path = beam.map(function(x) {
     var path = [x];
     var c = collission(x, {"x": 0, "y":1});
+    var idx = 0;
     while(c.pt !== null) {
 	path.push(c.pt);
 	c = collission(c.pt, c.v);
+	idx++;
+	if(idx>20){break;}
     }
     var last = path[path.length-1];
     path.push(box_collide(last, c.v));
