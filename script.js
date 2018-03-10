@@ -104,14 +104,27 @@ var hit = neutron_path.map(function(x) {
 });
 
 hit.subscribe(function(pt) {
-    if(pt!==null) {
-	final.setAttribute("cx", pt.x);
-	final.setAttribute("cy", pt.y);
-	final.setAttribute("r", 5);
-    } else {
-	final.setAttribute("r", 0);
-    }
-    
+    final.setAttribute("cx", pt.x);
+    final.setAttribute("cy", pt.y);
 });
 
 console.log("None");
+
+Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
+    .map(e => e.target.checked)
+    .subscribe(function(b){
+	if(b) {
+	    neutron.setAttribute("class", "drawn");
+	} else {
+	    neutron.setAttribute("class", "hidden");
+	}});
+
+var sample = document.querySelector("#sample");
+Rx.Observable.fromEvent(document.querySelector("#view-sample"), "change")
+    .map(e => e.target.checked)
+    .subscribe(function(b){
+	if(b) {
+	    sample.setAttribute("class", "sample");
+	} else {
+	    sample.setAttribute("class", "hidden");
+	}});

@@ -41,6 +41,19 @@ tbody tr:nth-child(even) {
 }
 
 path {
-    stroke: black;
     fill: none;
+}
+
+path.drawn {
+    stroke: black;
+}
+
+.hidden {
+    stroke: none;
+    fill: none;
+}
+
+.sample {
+    fill: red;
+    stroke: none;
 }
