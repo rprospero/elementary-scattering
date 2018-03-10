@@ -31,7 +31,7 @@ function box_collide(x, v) {
     hits.push((200-x.y)/v.y);
     hits = hits.filter(x => x>0);
     hits.sort((a, b) => a-b)
-    return add(x, scale(hits[0], v));
+    return add(x, scale(hits[0]-9, v));
 }
     
 
