@@ -53,6 +53,15 @@ function Circle(r, cntr) {
 	v_out = sub(v, scale(2*dot(v, norm), norm));
 	return {"pt": pt, "v": v_out};
     };
+    this.draw = function() {
+	var node = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+	node.setAttribute("cx", this.center.x);
+	node.setAttribute("cy", this.center.y);
+	node.setAttribute("r", this.radius);
+	node.setAttribute("class", "sample");
+
+	return node;
+    }
 }
 
 function points2homogeneous(p1, p2) {
@@ -165,6 +174,13 @@ function Polygon(pts) {
 	return {"pt": pt, "v": v_out};
 	// return {"pt": pt, "v": norm};
     };
+    this.draw = function() {
+	var node = document.createElementNS("http://www.w3.org/2000/svg", "path");
+	node.setAttribute("d", makePath(this.points));
+	node.setAttribute("class", "sample");
+
+	return node;
+    };
 }
 
 var circle = new Circle(35, {"x": 100, "y":100});
@@ -210,6 +226,8 @@ beam.subscribe(pt => document.querySelector("#source").setAttribute("transform",
 var neutron_path = beam.map(function(x) {
     var path = [x];
     var sample = triangle;
+    document.querySelector("#sample").innerHTML = "";
+    document.querySelector("#sample").appendChild(sample.draw());
     var c = sample.collission(x, {"x": 0, "y":1});
     var idx = 0;
     while(c.pt !== null) {
@@ -246,12 +264,12 @@ Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
 	    neutron.setAttribute("class", "hidden");
 	}});
 
-var sample = document.querySelector("#sample").children[0];
+var sample = document.querySelector("#sample");
 Rx.Observable.fromEvent(document.querySelector("#view-sample"), "change")
     .map(e => e.target.checked)
     .subscribe(function(b){
 	if(b) {
-	    sample.setAttribute("class", "sample");
+	    sample.setAttribute("visibility", "visible");
 	} else {
-	    sample.setAttribute("class", "hidden");
+	    sample.setAttribute("visibility", "hidden");
 	}});
