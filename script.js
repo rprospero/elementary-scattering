@@ -84,6 +84,8 @@ var beam = Rx.Observable.fromEvent(svg, "mousemove")
 	return cursorpt;
     });
 
+beam.subscribe(pt => document.querySelector("#source").setAttribute("transform","translate("+pt.x+",0)"))
+
 var neutron_path = beam.map(function(x) {
     var path = [x];
     var c = collission(x, {"x": 0, "y":1});
