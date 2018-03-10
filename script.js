@@ -2,7 +2,7 @@
 
 console.log("Hello, World");
 
-var radius = 20;
+var radius = 35;
 var svg = document.querySelector("svg");
 var pt = svg.createSVGPoint();
 var neutron = document.querySelector("#neutron")
