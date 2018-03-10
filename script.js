@@ -246,7 +246,7 @@ Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
 	    neutron.setAttribute("class", "hidden");
 	}});
 
-var sample = document.querySelector("#sample");
+var sample = document.querySelector("#sample").children[0];
 Rx.Observable.fromEvent(document.querySelector("#view-sample"), "change")
     .map(e => e.target.checked)
     .subscribe(function(b){
