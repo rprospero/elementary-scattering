@@ -10,8 +10,8 @@
 	<path d="M 0 0 l 0 10 l -3 -3 l 3 3 l 3 -3"
 	      class="drawn" />
       </g>
-      <g id="sample">
-	<path d="M 100 80 L 120 100 L 100 120 L 80 100" class="hidden"/>
+      <g id="sample" visibility="hidden">
+	<path d="M 100 80 L 120 100 L 100 120 L 80 100" class="drawn"/>
       </g>
       <circle cx=-100 cy=-100  r=9  fill="blue" id="final"/>
       <path d="M 100 0 L 100 200" id="neutron" class="hidden"/>
@@ -24,8 +24,15 @@
       View Sample
     </label>
     <input type="checkbox" id="view-sample">
-
+    <label for="sample-choice">
+      Sample
+    </label>
+    <select id="sample-choice">
+      <option>circle</option>
+      <option>square</option>
+    </select>
   </body>
+
   <script src="Rx.min.js"> </script>
   <script src="script.js"></script>
 </html>

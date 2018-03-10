@@ -1,7 +1,5 @@
 "use strict";
 
-console.log("Hello, World");
-
 var svg = document.querySelector("svg");
 var pt = svg.createSVGPoint();
 var neutron = document.querySelector("#neutron")
@@ -169,7 +167,6 @@ function Polygon(pts) {
 	norm = scale(1/Math.sqrt(dot(norm, norm)), norm);
 	if(dot(v, norm) > 0) {norm = scale(-1, norm);}
 	var v_out = sub(v, scale(2*dot(v, norm), norm));
-	console.log(norm)
 		       
 	return {"pt": pt, "v": v_out};
 	// return {"pt": pt, "v": norm};
@@ -182,10 +179,6 @@ function Polygon(pts) {
 	return node;
     };
 }
-
-var circle = new Circle(35, {"x": 100, "y":100});
-var triangle = new Polygon([{"x": 100, "y": 80}, {"x": 120, "y": 100},
-			    {"x": 100, "y": 120}, {"x": 80, "y": 100}]);
 
 
 function box_collide(x, v) {
@@ -225,9 +218,7 @@ beam.subscribe(pt => document.querySelector("#source").setAttribute("transform",
 
 var neutron_path = beam.map(function(x) {
     var path = [x];
-    var sample = triangle;
-    document.querySelector("#sample").innerHTML = "";
-    document.querySelector("#sample").appendChild(sample.draw());
+    var sample = square;
     var c = sample.collission(x, {"x": 0, "y":1});
     var idx = 0;
     while(c.pt !== null) {
@@ -253,10 +244,9 @@ hit.subscribe(function(pt) {
     final.setAttribute("cy", pt.y);
 });
 
-console.log("None");
-
 Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
     .map(e => e.target.checked)
+    .startWith(document.querySelector("#view-path").checked)
     .subscribe(function(b){
 	if(b) {
 	    neutron.setAttribute("class", "drawn");
@@ -267,9 +257,32 @@ Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
 var sample = document.querySelector("#sample");
 Rx.Observable.fromEvent(document.querySelector("#view-sample"), "change")
     .map(e => e.target.checked)
+    .startWith(document.querySelector("#view-sample").checked)
     .subscribe(function(b){
 	if(b) {
 	    sample.setAttribute("visibility", "visible");
 	} else {
 	    sample.setAttribute("visibility", "hidden");
 	}});
+
+
+var circle = new Circle(35, {"x": 100, "y":100});
+var square = new Polygon([{"x": 100, "y": 80}, {"x": 120, "y": 100},
+			    {"x": 100, "y": 120}, {"x": 80, "y": 100}]);
+
+var active_sample = Rx.Observable.fromEvent(document.querySelector("#sample-choice"), "change")
+    .map(x => x.target.value)
+    .startWith(document.querySelector("#sample-choice").value)
+    .map(function(choice) {
+	if(choice === "square") {
+	    return square;
+	}
+	return circle;
+    })
+
+active_sample.subscribe(console.log);
+
+active_sample.subscribe( function(sample) {
+    document.querySelector("#sample").innerHTML = "";
+    document.querySelector("#sample").appendChild(sample.draw());
+});
