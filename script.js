@@ -216,34 +216,6 @@ var beam = Rx.Observable.fromEvent(svg, "mousemove")
 
 beam.subscribe(pt => document.querySelector("#source").setAttribute("transform","translate("+pt.x+",0)"))
 
-var neutron_path = beam.map(function(x) {
-    var path = [x];
-    var sample = square;
-    var c = sample.collission(x, {"x": 0, "y":1});
-    var idx = 0;
-    while(c.pt !== null) {
-	path.push(c.pt);
-	c = sample.collission(c.pt, c.v);
-	idx++;
-	if(idx>3){break;}
-    }
-    var last = path[path.length-1];
-    path.push(box_collide(last, c.v));
-    // path.push({"x": last.x+40*c.v.x, "y": last.y+40*c.v.y})
-    return path;});
-
-neutron_path.map(makePath)
-    .subscribe(path => neutron.setAttribute("d",path));
-
-var hit = neutron_path.map(function(x) {
-    return x[x.length-1];
-});
-
-hit.subscribe(function(pt) {
-    final.setAttribute("cx", pt.x);
-    final.setAttribute("cy", pt.y);
-});
-
 Rx.Observable.fromEvent(document.querySelector("#view-path"), "change")
     .map(e => e.target.checked)
     .startWith(document.querySelector("#view-path").checked)
@@ -267,8 +239,8 @@ Rx.Observable.fromEvent(document.querySelector("#view-sample"), "change")
 
 
 var circle = new Circle(35, {"x": 100, "y":100});
-var square = new Polygon([{"x": 100, "y": 80}, {"x": 120, "y": 100},
-			    {"x": 100, "y": 120}, {"x": 80, "y": 100}]);
+var square = new Polygon([{"x": 100, "y": 40}, {"x": 160, "y": 100},
+			    {"x": 100, "y": 160}, {"x": 40, "y": 100}]);
 
 var active_sample = Rx.Observable.fromEvent(document.querySelector("#sample-choice"), "change")
     .map(x => x.target.value)
@@ -285,4 +257,34 @@ active_sample.subscribe(console.log);
 active_sample.subscribe( function(sample) {
     document.querySelector("#sample").innerHTML = "";
     document.querySelector("#sample").appendChild(sample.draw());
+});
+
+var neutron_path = beam.combineLatest(active_sample)
+    .map(function(x) {
+	var path = [x[0]];
+	var sample = x[1];
+	console.log(sample);
+	var c = sample.collission(path[0], {"x": 0, "y":1});
+	var idx = 0;
+	while(c.pt !== null) {
+	    path.push(c.pt);
+	    c = sample.collission(c.pt, c.v);
+	    idx++;
+	    if(idx>3){break;}
+	}
+	var last = path[path.length-1];
+	path.push(box_collide(last, c.v));
+	// path.push({"x": last.x+40*c.v.x, "y": last.y+40*c.v.y})
+	return path;});
+
+neutron_path.map(makePath)
+    .subscribe(path => neutron.setAttribute("d",path));
+
+var hit = neutron_path.map(function(x) {
+    return x[x.length-1];
+});
+
+hit.subscribe(function(pt) {
+    final.setAttribute("cx", pt.x);
+    final.setAttribute("cy", pt.y);
 });
