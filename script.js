@@ -205,13 +205,21 @@ function makePath(a) {
     return result;
 };
 
-var beam = Rx.Observable.fromEvent(svg, "mousemove")
+// Beam at mouse cursor
+// var beam = Rx.Observable.fromEvent(svg, "mousemove")
+//     .map(function(e) {
+// 	pt.x = e.clientX;
+// 	pt.y = e.clientY;
+// 	var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
+// 	cursorpt.y = 0;
+// 	return cursorpt;
+//     });
+
+//Beam moves on its own
+var beam = Rx.Observable.timer(25, 25)
     .map(function(e) {
-	pt.x = e.clientX;
-	pt.y = e.clientY;
-	var cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
-	cursorpt.y = 0;
-	return cursorpt;
+	var x = e % 200;
+	return {"x": x, "y": 0};
     });
 
 beam.subscribe(pt => document.querySelector("#source").setAttribute("transform","translate("+pt.x+",0)"))
