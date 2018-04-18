@@ -205,6 +205,21 @@ function makePath(a) {
     return result;
 };
 
+function and_back(width) {
+    return function(e) {
+	var x = e % (2*width);
+	if(x>width) {x = 2*width-x;}
+	return {"x": x, "y": 0};
+    };
+}
+
+function ease(width, timer) {
+    return function(e) {
+	var x = (width+width*Math.sin(2*Math.PI*e/timer))/2;
+	return {"x": x, "y": 0};
+    };
+}
+
 // Beam at mouse cursor
 // var beam = Rx.Observable.fromEvent(svg, "mousemove")
 //     .map(function(e) {
@@ -217,10 +232,8 @@ function makePath(a) {
 
 //Beam moves on its own
 var beam = Rx.Observable.timer(25, 25)
-    .map(function(e) {
-	var x = e % 200;
-	return {"x": x, "y": 0};
-    });
+    // .map(and_back(200));
+    .map(ease(200, 500));
 
 beam.subscribe(pt => document.querySelector("#source").setAttribute("transform","translate("+pt.x+",0)"))
 
