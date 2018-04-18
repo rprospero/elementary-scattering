@@ -260,8 +260,6 @@ var active_sample = Rx.Observable.fromEvent(document.querySelector("#sample-choi
 	return circle;
     })
 
-active_sample.subscribe(console.log);
-
 active_sample.subscribe( function(sample) {
     document.querySelector("#sample").innerHTML = "";
     document.querySelector("#sample").appendChild(sample.draw());
@@ -271,7 +269,6 @@ var neutron_path = beam.combineLatest(active_sample)
     .map(function(x) {
 	var path = [x[0]];
 	var sample = x[1];
-	console.log(sample);
 	var c = sample.collission(path[0], {"x": 0, "y":1});
 	var idx = 0;
 	while(c.pt !== null) {
